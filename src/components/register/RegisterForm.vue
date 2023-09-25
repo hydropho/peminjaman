@@ -109,8 +109,8 @@ export default {
               this.$router.replace("/login");
               this.loading = false;
             },
-            () => {
-              this.message = "User already exist";
+            (error) => {
+              this.message = error.response.data.message;
               this.loading = false;
             }
           );

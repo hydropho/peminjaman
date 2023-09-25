@@ -6,16 +6,10 @@
 
 <script>
 import Navbar from "@/components/Navbar.vue";
-
 export default {
-  name: "HomePage",
+  name: "ItemPage",
   components: {
     Navbar,
-  },
-  computed: {
-    currentUser() {
-      return this.$store.state.user.user;
-    },
   },
 };
 </script>

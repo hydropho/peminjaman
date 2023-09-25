@@ -1,5 +1,5 @@
 <template>
-  <header class="navbar sticky-top navbar-expand-lg">
+  <header class="navbar bg-primary sticky-top navbar-expand-lg">
     <nav class="container-fluid flex-wrap flex-lg-nowrap">
       <a class="navbar-brand fs-1">Peminjaman</a>
       <button
@@ -30,12 +30,12 @@
         </div>
         <div class="offcanvas-body py-0 justify-content-lg-end d-flex">
           <ul class="navbar-nav">
-            <li class="nav-item d-lg-none">
+            <li class="nav-item d-lg-none" v-if="!currentUser">
               <router-link to="/login" class="nav-link">
                 <a>Login</a>
               </router-link>
             </li>
-            <li class="nav-item d-lg-none">
+            <li class="nav-item d-lg-none" v-if="!currentUser">
               <router-link to="/register" class="nav-link">
                 <a>Register</a>
               </router-link>
@@ -45,20 +45,41 @@
                 <a>Home</a>
               </router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="currentUser">
               <router-link to="/item" class="nav-link">
                 <a>Item</a>
               </router-link>
             </li>
-            <li class="nav-item d-none d-lg-block">
+            <li class="nav-item d-none d-lg-block" v-if="!currentUser">
               <router-link to="/login" class="nav-link">
                 <a>Login</a>
               </router-link>
             </li>
-            <li class="nav-item d-none d-lg-block">
+            <li class="nav-item d-none d-lg-block" v-if="!currentUser">
               <router-link to="/register" class="nav-link">
                 <a>Register</a>
               </router-link>
+            </li>
+            <li class="nav-item d-none d-lg-block dropdown" v-if="currentUser">
+              <button
+                class="nav-link"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                {{ currentUser.name }}
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <router-link class="dropdown-item" to="/profile"
+                    >Profile</router-link
+                  >
+                </li>
+                <li>
+                  <button class="dropdown-item" @click.prevent="logout">
+                    Logout
+                  </button>
+                </li>
+              </ul>
             </li>
           </ul>
         </div>
@@ -70,6 +91,17 @@
 <script>
 export default {
   name: "NavbarComponent",
+  computed: {
+    currentUser() {
+      return this.$store.state.user.user;
+    },
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch("user/logout");
+      this.$router.push("/login");
+    },
+  },
 };
 </script>
 

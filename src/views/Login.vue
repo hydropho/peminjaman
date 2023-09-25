@@ -15,6 +15,16 @@ export default {
   components: {
     LoginForm,
   },
+  computed: {
+    loggedIn() {
+      return this.$store.state.user.loggedIn;
+    },
+  },
+  created() {
+    if (this.loggedIn) {
+      this.$router.push("/");
+    }
+  },
 };
 </script>
 
