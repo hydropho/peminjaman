@@ -1,9 +1,8 @@
 <template>
-  <div
-    class="row justify-content-center align-items-center"
-    style="height: 100vh"
-  >
-    <LoginForm class="col-md-6 col-lg-4 col-xxl-3" />
+  <div class="container-fluid vh-100">
+    <div class="row justify-content-center align-items-center h-100">
+      <LoginForm class="col-md-6 col-lg-4 col-xxl-3" />
+    </div>
   </div>
 </template>
 

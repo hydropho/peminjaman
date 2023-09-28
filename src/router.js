@@ -29,7 +29,10 @@ export default new VueRouter({
         {
             path: "/item",
             name: "item",
-            component: Item
+            component: Item,
+            meta: {
+                auth: true,
+            }
         },
     ]
 })

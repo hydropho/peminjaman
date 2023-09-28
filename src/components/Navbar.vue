@@ -1,9 +1,11 @@
 <template>
-  <header class="navbar bg-primary sticky-top navbar-expand-lg">
-    <nav class="container-fluid flex-wrap flex-lg-nowrap">
-      <a class="navbar-brand fs-1">Peminjaman</a>
+  <nav class="navbar navbar-expand-lg sticky-top bg-white">
+    <div class="container-fluid">
+      <router-link to="/" class="text-decoration-none border-0 bg-transparent">
+        <span class="navbar-brand">Peminjaman</span></router-link
+      >
       <button
-        class="navbar-toggler d-lg-none"
+        class="navbar-toggler shadow-none border-0"
         type="button"
         data-bs-toggle="offcanvas"
         data-bs-target="#offcanvasNavbar"
@@ -13,79 +15,109 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div
-        class="offcanvas-lg offcanvas-end flex-grow-1"
+        class="offcanvas offcanvas-end"
         tabindex="-1"
         id="offcanvasNavbar"
         aria-labelledby="offcanvasNavbarLabel"
       >
         <div class="offcanvas-header">
-          <h1 class="offcanvas-title" id="offcanvasNavbarLabel">Peminjaman</h1>
+          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Peminjaman</h5>
           <button
             type="button"
-            class="btn-close"
+            class="btn-close shadow-none"
             data-bs-dismiss="offcanvas"
-            data-bs-target="#offcanvasNavbar"
             aria-label="Close"
           ></button>
         </div>
-        <div class="offcanvas-body py-0 justify-content-lg-end d-flex">
-          <ul class="navbar-nav">
-            <li class="nav-item d-lg-none" v-if="!currentUser">
-              <router-link to="/login" class="nav-link">
-                <a>Login</a>
+        <div
+          class="offcanvas-body d-flex align-items-lg-center flex-column flex-lg-row"
+        >
+          <ul class="navbar-nav justify-content-lg-center flex-grow-1">
+            <li class="nav-item mb-2 mb-lg-0 mx-lg-2">
+              <router-link to="/" class="nav-link px-3 px-lg-2">
+                Home
               </router-link>
             </li>
-            <li class="nav-item d-lg-none" v-if="!currentUser">
-              <router-link to="/register" class="nav-link">
-                <a>Register</a>
+            <li class="nav-item mb-2 mb-lg-0 mx-lg-2" v-if="currentUser">
+              <router-link to="/item" class="nav-link px-3 px-lg-2">
+                Item
               </router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/" class="nav-link">
-                <a>Home</a>
-              </router-link>
-            </li>
-            <li class="nav-item" v-if="currentUser">
-              <router-link to="/item" class="nav-link">
-                <a>Item</a>
-              </router-link>
-            </li>
-            <li class="nav-item d-none d-lg-block" v-if="!currentUser">
-              <router-link to="/login" class="nav-link">
-                <a>Login</a>
-              </router-link>
-            </li>
-            <li class="nav-item d-none d-lg-block" v-if="!currentUser">
-              <router-link to="/register" class="nav-link">
-                <a>Register</a>
-              </router-link>
-            </li>
-            <li class="nav-item d-none d-lg-block dropdown" v-if="currentUser">
-              <button
-                class="nav-link"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                {{ currentUser.name }}
-              </button>
-              <ul class="dropdown-menu dropdown-menu-end">
-                <li>
-                  <router-link class="dropdown-item" to="/profile"
-                    >Profile</router-link
-                  >
-                </li>
-                <li>
-                  <button class="dropdown-item" @click.prevent="logout">
-                    Logout
-                  </button>
-                </li>
-              </ul>
             </li>
           </ul>
+          <div
+            class="d-flex flex-column flex-lg-row justify-content-center align-items-center gap-3"
+            v-if="!currentUser"
+          >
+            <router-link to="/login" class="nav-link">Login </router-link>
+            <router-link
+              to="/register"
+              class="text-decoration-none rounded-pill btn btn-register"
+              >Register</router-link
+            >
+          </div>
+          <div class="d-none d-lg-block dropdown" v-if="currentUser">
+            <button
+              class="btn border-0 d-flex align-items-center p-0"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <span class="me-3">{{ currentUser.name }}</span>
+              <i class="bi bi-caret-down-fill"></i>
+            </button>
+            <ul class="dropdown-menu p-2 w-100 mt-3">
+              <li>
+                <router-link
+                  class="btn w-100 d-flex align-items-center border-0"
+                  to="/profile"
+                  ><i class="bi bi-person fs-5 me-3"></i>Profile</router-link
+                >
+              </li>
+              <hr class="m-2" />
+              <li>
+                <button
+                  class="btn w-100 d-flex align-items-center border-0"
+                  @click="logout"
+                >
+                  <i class="bi bi-box-arrow-right fs-5 me-3"></i>Logout
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div
+            class="d-lg-none dropup d-flex align-items-center"
+            v-if="currentUser"
+          >
+            <button
+              class="btn border-0 w-100 d-flex justify-content-between py-3"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              {{ currentUser.name }}
+              <i class="bi bi-caret-up-fill"></i>
+            </button>
+            <ul class="dropdown-menu p-2 w-100 m-0">
+              <li>
+                <router-link
+                  class="btn w-100 d-flex align-items-center border-0"
+                  to="/profile"
+                  ><i class="bi bi-person fs-5 me-3"></i>Profile</router-link
+                >
+              </li>
+              <hr class="m-2" />
+              <li>
+                <button
+                  class="btn w-100 d-flex align-items-center border-0"
+                  @click="logout"
+                >
+                  <i class="bi bi-box-arrow-right fs-5 me-3"></i>Logout
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-    </nav>
-  </header>
+    </div>
+  </nav>
 </template>
 
 <script>
@@ -106,7 +138,21 @@ export default {
 </script>
 
 <style scoped>
-.router-link-exact-active {
-  color: red;
+.btn-register {
+  background-color: salmon;
+  color: white;
+}
+
+@media (max-width: 992px) {
+  .router-link-exact-active {
+    background-color: salmon;
+    color: white;
+    border-radius: 0.5rem;
+  }
+}
+@media (min-width: 992px) {
+  .router-link-exact-active {
+    border-bottom: 2px solid salmon;
+  }
 }
 </style>
