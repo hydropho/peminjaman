@@ -31,7 +31,9 @@
         name="name"
       />
 
-      <p v-if="errors.has('name')" class="text-danger">Name cannot be empty!</p>
+      <p v-if="errors.has('name')" class="text-danger">
+        {{ errors.first("name") }}
+      </p>
     </div>
     <div class="mb-3 w-100">
       <label for="password" class="form-label">Password</label>

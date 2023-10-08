@@ -61,10 +61,12 @@
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              <span class="me-3">{{ currentUser.name }}</span>
+              <span class="me-3"
+                >Hello, {{ $store.getters["user/getFirstName"] }}</span
+              >
               <i class="bi bi-caret-down-fill"></i>
             </button>
-            <ul class="dropdown-menu p-2 w-100 mt-3">
+            <ul class="dropdown-menu dropdown-menu-end p-2 mt-3">
               <li>
                 <router-link
                   class="btn w-100 d-flex align-items-center border-0"
@@ -92,7 +94,8 @@
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              {{ currentUser.name }}
+              Hello,
+              {{ $store.getters["user/getFirstName"] }}
               <i class="bi bi-caret-up-fill"></i>
             </button>
             <ul class="dropdown-menu p-2 w-100 m-0">

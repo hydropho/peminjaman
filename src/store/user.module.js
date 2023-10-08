@@ -41,4 +41,9 @@ export default {
             commit('logout');
         }
     },
+    getters: {
+        getFirstName(state) {
+            return state.user.name.split(" ")[0];
+        }
+    }
 }
