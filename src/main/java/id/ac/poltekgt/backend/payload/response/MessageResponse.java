@@ -10,7 +10,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageResponse {
-
-    private String message;
     
+    private boolean success;
+
+    private String messageType;
+
+    private JwtResponse data;
+    
+    private String message;
+
 }

@@ -1,6 +1,7 @@
 package id.ac.poltekgt.backend.service;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,7 +32,7 @@ public class AuthenticationService {
 
     public ResponseEntity<?> register(RegisterRequest request) {
         if (userRepository.existsByNim(request.getNim())) {
-            return ResponseEntity.badRequest().body(MessageResponse.builder().message("NIM already exist").build());
+            return ResponseEntity.ok(MessageResponse.builder().success(false).messageType("Register Error").message("NIM already exist!").build());
         }
 
         var user = User.builder()
@@ -43,21 +44,32 @@ public class AuthenticationService {
 
         userRepository.save(user);
 
-        return ResponseEntity.ok(MessageResponse.builder().message("User registered successful").build());
+        return ResponseEntity.ok(MessageResponse.builder().success(true).messageType("Register Success").message("User registered successfully").build());
     }
 
     public ResponseEntity<?> login(LoginRequest request) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getNim(), request.getPassword()));
+        if (!userRepository.findByNim(request.getNim()).isPresent()) {
+            return ResponseEntity.ok(MessageResponse.builder().success(false).messageType("Login Failed").message("NIM doesn't exist!").build());
+        }
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        var user = userRepository.findByNim(request.getNim()).orElseThrow();
+        var user = userRepository.findByNim(request.getNim()).get();
+        
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getNim(), request.getPassword()));
+    
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+        catch(Exception e) {
+            return ResponseEntity.ok(MessageResponse.builder().success(false).messageType("Login Failed").message("Password is wrong!").build());
+        }
 
         var jwtToken = jwtService.generateToken(user);
 
-        return ResponseEntity.ok(JwtResponse.builder().token(jwtToken).id(user.getId()).nim(user.getNim())
-                .name(user.getName()).role(user.getRole().name()).build());
+        JwtResponse jwtResponse = JwtResponse.builder().token(jwtToken).id(user.getId()).nim(user.getNim())
+                .name(user.getName()).role(user.getRole().name()).build();
+
+        return ResponseEntity.ok(MessageResponse.builder().success(true).messageType("Login Success").data(jwtResponse).message("Login Success!").build());
     }
 
 }
