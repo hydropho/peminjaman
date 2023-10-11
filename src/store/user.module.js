@@ -26,14 +26,14 @@ export default {
         login({ commit }, user) {
             return AuthService.login(user)
                 .then(
-                    user => {
-                        commit('loginSuccess', user);
-                        return Promise.resolve(user);
-                    },
-                    error => {
+                    response => {
+                        if (response.success) {
+                            commit('loginSuccess', response.data);
+                            return Promise.resolve(response.data);
+                        }
                         commit('loginFailure');
-                        return Promise.reject(error);
-                    }
+                        return Promise.reject(response);
+                    },
                 )
         },
         logout({ commit }) {

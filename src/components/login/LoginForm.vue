@@ -13,11 +13,11 @@
         class="form-control"
         id="nim"
         v-model="user.nim"
-        v-validate="'required'"
+        v-validate="'required|min:7'"
         name="nim"
       />
 
-      <p v-if="errors.has('nim')" class="text-danger">NIM cannot be empty!</p>
+      <p v-if="errors.has('nim')" class="text-danger">{{ nimError }}</p>
     </div>
     <div class="mb-3 w-100">
       <label for="exampleInputPassword1" class="form-label">Password</label>
@@ -60,8 +60,32 @@ export default {
       loading: false,
     };
   },
+  watch: {
+    'user.nim'() {
+      if (this.user.nim.length > 7) {
+        this.user.nim = this.user.nim.slice(0,7)
+      } 
+      this.message = "";
+    },
+    'user.password'() {
+      this.message = "";
+    }
+  },
+  computed: {
+    nimError() {
+      switch (this.errors.first('nim')) {
+        case 'The nim field must be numeric and may contain decimal points':
+          return 'NIM cannot be empty!'
+        case 'The nim field must be at least 7 characters':
+          return 'NIM must be at least 7 characters!';
+        default:
+          return '';
+      }
+    }
+  },
   methods: {
     login() {
+      this.message = "";
       this.$validator.validateAll().then((isValid) => {
         this.loading = true;
         if (isValid) {
@@ -69,9 +93,10 @@ export default {
             () => {
               this.$router.push("/");
               this.loading = false;
-            },
-            () => {
-              this.message = "Username / password is wrong!";
+            }
+          ).catch(
+            error => {
+              this.message = error.message;
               this.loading = false;
             }
           );

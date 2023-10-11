@@ -94,7 +94,7 @@
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              Hello,
+              Hi,
               {{ $store.getters["user/getFirstName"] }}
               <i class="bi bi-caret-up-fill"></i>
             </button>

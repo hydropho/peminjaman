@@ -4,7 +4,7 @@
       class="row g-3 row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 justify-content-center"
     >
       <div class="col">
-        <div class="border border-1 rounded-3 d-flex flex-column">
+        <div class="shadow-sm rounded-3 d-flex flex-column">
           <img src="@/assets/wrench.png" alt="wrench" class="rounded-top" />
           <div class="content p-3 d-flex flex-column">
             <span class="fs-6">Wrench</span>
@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="col">
-        <div class="border border-1 rounded-3 d-flex flex-column">
+        <div class="shadow-sm rounded-3 d-flex flex-column">
           <img src="@/assets/grinding.jpg" alt="wrench" class="rounded-top" />
           <div class="content p-3 d-flex flex-column">
             <span class="fs-6">Grinding</span>
@@ -24,7 +24,7 @@
         </div>
       </div>
       <div class="col">
-        <div class="border border-1 rounded-3 d-flex flex-column">
+        <div class="shadow-sm rounded-3 d-flex flex-column">
           <img src="@/assets/drill.jpg" alt="wrench" class="rounded-top" />
           <div class="content p-3 d-flex flex-column">
             <span class="fs-6">Drill</span>
@@ -34,7 +34,7 @@
         </div>
       </div>
       <div class="col">
-        <div class="border border-1 rounded-3 d-flex flex-column">
+        <div class="shadow-sm rounded-3 d-flex flex-column">
           <img src="@/assets/welding.jpg" alt="wrench" class="rounded-top" />
           <div class="content p-3 d-flex flex-column">
             <span class="fs-6">Welding</span>

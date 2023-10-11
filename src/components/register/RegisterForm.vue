@@ -12,12 +12,12 @@
         class="form-control"
         id="nim"
         v-model="user.nim"
-        v-validate="'required|max:7'"
+        v-validate="'required|min:7'"
         name="nim"
       />
 
       <p v-if="errors.has('nim')" class="text-danger">
-        {{ errors.first("nim") }}
+        {{ nimError }}
       </p>
     </div>
     <div class="mb-3 w-100">
@@ -32,7 +32,7 @@
       />
 
       <p v-if="errors.has('name')" class="text-danger">
-        {{ errors.first("name") }}
+        Name cannot be empty!
       </p>
     </div>
     <div class="mb-3 w-100">
@@ -47,7 +47,7 @@
         ref="password"
       />
       <p v-if="errors.has('password')" class="text-danger">
-        {{ errors.first("password") }}
+        {{ passwordError }}
       </p>
     </div>
     <div class="mb-3 w-100">
@@ -63,7 +63,7 @@
         name="confirmation-password"
       />
       <p v-if="errors.has('confirmation-password')" class="text-danger">
-        {{ errors.first("confirmation-password") }}
+        {{ confirmationPasswordError }}
       </p>
     </div>
     <p v-if="message" class="text-danger">
@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import AuthService from "@/services/auth.service";
+import AuthService from '@/services/auth.service';
 
 export default {
   name: "RegisterFormComponent",
@@ -101,20 +101,79 @@ export default {
       loading: false,
     };
   },
+  watch: {
+    'user.nim'() {
+      if (this.user.nim.length > 7) {
+        this.user.nim = this.user.nim.slice(0,7)
+      } 
+      this.message = "";
+    },
+    'user.name'() {
+      this.message = "";
+    },
+    'user.password'() {
+      this.message = "";
+    },
+    confirmPassword() {
+      this.message = "";
+    }
+  },
+  computed: {
+    nimError() {
+      switch (this.errors.first('nim')) {
+        case 'The nim field must be numeric and may contain decimal points':
+          return 'NIM cannot be empty!'
+        case 'The nim field must be at least 7 characters':
+          return 'NIM must be at least 7 characters!';
+        default:
+          return '';
+      }
+    },
+    nameError() {
+      switch (this.errors.first('name')) {
+        case 'The name field is required':
+          return 'Name cannot be empty!'
+        default:
+          return '';
+      }
+    },
+    passwordError() {
+      switch (this.errors.first('password')) {
+        case 'The password field is required':
+          return 'Password cannot be empty!'
+        case 'The password field must be at least 8 characters':
+          return 'Password must be at least 8 characters!';
+        default:
+          return '';
+      }
+    },
+    confirmationPasswordError() {
+      switch (this.errors.first('confirmation-password')) {
+        case 'The confirmation-password field is required':
+          return 'Confirmation password cannot be empty!'
+        case 'The confirmation-password field must be at least 8 characters':
+          return 'Confirmation password must be at least 8 characters!';
+        case 'The confirmation-password confirmation does not match':
+          return "Confirmation password doesn't match!";
+        default:
+          return '';
+      }
+    },
+  },
   methods: {
     register() {
       this.$validator.validate().then((isValid) => {
         if (isValid) {
           this.loading = true;
           AuthService.register(this.user).then(
-            () => {
-              this.$router.replace("/login");
+            (response) => {
+              if (response.success){
+                this.$router.replace("/login");
+                this.loading = false;
+              }
+              this.message = response.message;
               this.loading = false;
             },
-            (error) => {
-              this.message = error.response.data.message;
-              this.loading = false;
-            }
           );
         }
       });

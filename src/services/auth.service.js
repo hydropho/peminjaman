@@ -10,8 +10,8 @@ class AuthService {
         password: user.password
       })
       .then(response => {
-        if (response.data.token) {
-          localStorage.setItem('user', JSON.stringify(response.data));
+        if (response.data.success) {
+          localStorage.setItem('user', JSON.stringify(response.data.data));
         }
         return response.data;
       });
@@ -26,6 +26,8 @@ class AuthService {
       nim: user.nim,
       name: user.name,
       password: user.password
+    }).then(response => {
+      return response.data;
     });
   }
 }
