@@ -1,7 +1,6 @@
 package id.ac.poltekgt.backend.service;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,12 +33,21 @@ public class AuthenticationService {
         if (userRepository.existsByNim(request.getNim())) {
             return ResponseEntity.ok(MessageResponse.builder().success(false).messageType("Register Error").message("NIM already exist!").build());
         }
+        
+        ERole role;
+
+        if (request.getRole() == null) {
+            role = ERole.ROLE_USER;
+        } else {
+            role = ERole.ROLE_ADMIN;
+
+        }
 
         var user = User.builder()
                 .name(request.getName())
                 .nim(request.getNim())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(ERole.USER)
+                .role(role)
                 .build();
 
         userRepository.save(user);

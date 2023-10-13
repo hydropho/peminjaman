@@ -44,6 +44,7 @@ public class User implements UserDetails{
     @Size(max = 120)
     private String password;
 
+    @NotBlank
     @Enumerated(EnumType.STRING)
     private ERole role;
 

@@ -16,4 +16,6 @@ public class RegisterRequest {
     private String nim;
     
     private String password;
+
+    private String role;
 }
