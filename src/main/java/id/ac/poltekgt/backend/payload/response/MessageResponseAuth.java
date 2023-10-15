@@ -9,14 +9,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MessageResponse {
-    
+public class MessageResponseAuth {
+
     private boolean success;
 
     private String messageType;
 
     private JwtResponse data;
-    
+
     private String message;
 
 }

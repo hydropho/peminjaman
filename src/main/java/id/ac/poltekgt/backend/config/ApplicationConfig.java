@@ -19,10 +19,11 @@ import lombok.RequiredArgsConstructor;
 public class ApplicationConfig {
 
     private final UserRepository userRepository;
-    
+
     @Bean
-    public UserDetailsService userDetailsService(){
-        return username -> userRepository.findByNim(username).orElseThrow(() -> new UsernameNotFoundException("User not found")); 
+    public UserDetailsService userDetailsService() {
+        return username -> userRepository.findByNim(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     };
 
     @Bean

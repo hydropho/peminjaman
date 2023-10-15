@@ -8,12 +8,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import id.ac.poltekgt.backend.models.ERole;
+import id.ac.poltekgt.backend.models.Role;
 import id.ac.poltekgt.backend.models.User;
 import id.ac.poltekgt.backend.payload.request.LoginRequest;
 import id.ac.poltekgt.backend.payload.request.RegisterRequest;
 import id.ac.poltekgt.backend.payload.response.JwtResponse;
-import id.ac.poltekgt.backend.payload.response.MessageResponse;
+import id.ac.poltekgt.backend.payload.response.MessageResponseAuth;
 import id.ac.poltekgt.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -31,16 +31,16 @@ public class AuthenticationService {
 
     public ResponseEntity<?> register(RegisterRequest request) {
         if (userRepository.existsByNim(request.getNim())) {
-            return ResponseEntity.ok(MessageResponse.builder().success(false).messageType("Register Error").message("NIM already exist!").build());
+            return ResponseEntity.ok(MessageResponseAuth.builder().success(false).messageType("Register Error")
+                    .message("NIM already exist!").build());
         }
-        
-        ERole role;
 
-        if (request.getRole() == null) {
-            role = ERole.ROLE_USER;
+        Role role;
+
+        if (request.getRole() == null || request.getRole() == "") {
+            role = Role.builder().id(2).build();
         } else {
-            role = ERole.ROLE_ADMIN;
-
+            role = Role.builder().id(1).build();
         }
 
         var user = User.builder()
@@ -52,32 +52,36 @@ public class AuthenticationService {
 
         userRepository.save(user);
 
-        return ResponseEntity.ok(MessageResponse.builder().success(true).messageType("Register Success").message("User registered successfully").build());
+        return ResponseEntity.ok(MessageResponseAuth.builder().success(true).messageType("Register Success")
+                .message("User registered successfully").build());
     }
 
     public ResponseEntity<?> login(LoginRequest request) {
         if (!userRepository.findByNim(request.getNim()).isPresent()) {
-            return ResponseEntity.ok(MessageResponse.builder().success(false).messageType("Login Failed").message("NIM doesn't exist!").build());
+            return ResponseEntity.ok(MessageResponseAuth.builder().success(false).messageType("Login Failed")
+                    .message("NIM doesn't exist!").build());
         }
 
         var user = userRepository.findByNim(request.getNim()).get();
-        
+
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getNim(), request.getPassword()));
-    
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        }
-        catch(Exception e) {
-            return ResponseEntity.ok(MessageResponse.builder().success(false).messageType("Login Failed").message("Password is wrong!").build());
+        } catch (Exception e) {
+            return ResponseEntity.ok(MessageResponseAuth.builder().success(false).messageType("Login Failed")
+                    .message("Password is wrong!").build());
         }
 
         var jwtToken = jwtService.generateToken(user);
 
         JwtResponse jwtResponse = JwtResponse.builder().token(jwtToken).id(user.getId()).nim(user.getNim())
-                .name(user.getName()).role(user.getRole().name()).build();
+                .name(user.getName()).role(user.getRole().getName()).build();
 
-        return ResponseEntity.ok(MessageResponse.builder().success(true).messageType("Login Success").data(jwtResponse).message("Login Success!").build());
+        return ResponseEntity
+                .ok(MessageResponseAuth.builder().success(true).messageType("Login Success").data(jwtResponse)
+                        .message("Login Success!").build());
     }
 
 }

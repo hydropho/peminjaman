@@ -1,4 +1,4 @@
-package id.ac.poltekgt.backend.models;
+package id.ac.poltekgt.backend.models.Enum;
 
 import lombok.RequiredArgsConstructor;
 
