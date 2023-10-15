@@ -31,9 +31,7 @@
         name="name"
       />
 
-      <p v-if="errors.has('name')" class="text-danger">
-        Name cannot be empty!
-      </p>
+      <p v-if="errors.has('name')" class="text-danger">Name cannot be empty!</p>
     </div>
     <div class="mb-3 w-100">
       <label for="password" class="form-label">Password</label>
@@ -85,7 +83,7 @@
 </template>
 
 <script>
-import AuthService from '@/services/auth.service';
+import AuthService from "@/services/auth.service";
 
 export default {
   name: "RegisterFormComponent",
@@ -102,61 +100,61 @@ export default {
     };
   },
   watch: {
-    'user.nim'() {
+    "user.nim"() {
       if (this.user.nim.length > 7) {
-        this.user.nim = this.user.nim.slice(0,7)
-      } 
+        this.user.nim = this.user.nim.slice(0, 7);
+      }
       this.message = "";
     },
-    'user.name'() {
+    "user.name"() {
       this.message = "";
     },
-    'user.password'() {
+    "user.password"() {
       this.message = "";
     },
     confirmPassword() {
       this.message = "";
-    }
+    },
   },
   computed: {
     nimError() {
-      switch (this.errors.first('nim')) {
-        case 'The nim field must be numeric and may contain decimal points':
-          return 'NIM cannot be empty!'
-        case 'The nim field must be at least 7 characters':
-          return 'NIM must be at least 7 characters!';
+      switch (this.errors.first("nim")) {
+        case "The nim field must be numeric and may contain decimal points":
+          return "NIM cannot be empty!";
+        case "The nim field must be at least 7 characters":
+          return "NIM must be at least 7 characters!";
         default:
-          return '';
+          return "";
       }
     },
     nameError() {
-      switch (this.errors.first('name')) {
-        case 'The name field is required':
-          return 'Name cannot be empty!'
+      switch (this.errors.first("name")) {
+        case "The name field is required":
+          return "Name cannot be empty!";
         default:
-          return '';
+          return "";
       }
     },
     passwordError() {
-      switch (this.errors.first('password')) {
-        case 'The password field is required':
-          return 'Password cannot be empty!'
-        case 'The password field must be at least 8 characters':
-          return 'Password must be at least 8 characters!';
+      switch (this.errors.first("password")) {
+        case "The password field is required":
+          return "Password cannot be empty!";
+        case "The password field must be at least 8 characters":
+          return "Password must be at least 8 characters!";
         default:
-          return '';
+          return "";
       }
     },
     confirmationPasswordError() {
-      switch (this.errors.first('confirmation-password')) {
-        case 'The confirmation-password field is required':
-          return 'Confirmation password cannot be empty!'
-        case 'The confirmation-password field must be at least 8 characters':
-          return 'Confirmation password must be at least 8 characters!';
-        case 'The confirmation-password confirmation does not match':
+      switch (this.errors.first("confirmation-password")) {
+        case "The confirmation-password field is required":
+          return "Confirmation password cannot be empty!";
+        case "The confirmation-password field must be at least 8 characters":
+          return "Confirmation password must be at least 8 characters!";
+        case "The confirmation-password confirmation does not match":
           return "Confirmation password doesn't match!";
         default:
-          return '';
+          return "";
       }
     },
   },
@@ -167,13 +165,18 @@ export default {
           this.loading = true;
           AuthService.register(this.user).then(
             (response) => {
-              if (response.success){
+              if (response.success) {
                 this.$router.replace("/login");
                 this.loading = false;
               }
               this.message = response.message;
               this.loading = false;
             },
+            (error) => {
+              console.log(error);
+              this.message = error.message;
+              this.loading = false;
+            }
           );
         }
       });
