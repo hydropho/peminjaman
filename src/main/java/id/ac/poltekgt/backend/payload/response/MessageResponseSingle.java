@@ -1,8 +1,5 @@
 package id.ac.poltekgt.backend.payload.response;
 
-import java.util.List;
-
-import id.ac.poltekgt.backend.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,11 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MessageResponseQueryList {
+public class MessageResponseSingle {
 
     private boolean success;
 
-    private List<User> data;
+    private Object data;
 
     private String message;
 

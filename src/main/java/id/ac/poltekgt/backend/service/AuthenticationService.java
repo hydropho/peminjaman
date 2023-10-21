@@ -31,8 +31,11 @@ public class AuthenticationService {
 
     public ResponseEntity<?> register(RegisterRequest request) {
         if (userRepository.existsByNim(request.getNim())) {
-            return ResponseEntity.ok(MessageResponseAuth.builder().success(false).messageType("Register Error")
-                    .message("NIM already exist!").build());
+            return ResponseEntity.ok(MessageResponseAuth
+                    .builder()
+                    .success(false)
+                    .message("NIM already exist!")
+                    .build());
         }
 
         Role role;
@@ -52,14 +55,20 @@ public class AuthenticationService {
 
         userRepository.save(user);
 
-        return ResponseEntity.ok(MessageResponseAuth.builder().success(true).messageType("Register Success")
-                .message("User registered successfully").build());
+        return ResponseEntity.ok(MessageResponseAuth
+                .builder()
+                .success(true)
+                .message("User registered successfully!")
+                .build());
     }
 
     public ResponseEntity<?> login(LoginRequest request) {
         if (!userRepository.findByNim(request.getNim()).isPresent()) {
-            return ResponseEntity.ok(MessageResponseAuth.builder().success(false).messageType("Login Failed")
-                    .message("NIM doesn't exist!").build());
+            return ResponseEntity.ok(MessageResponseAuth
+                    .builder()
+                    .success(false)
+                    .message("NIM doesn't exist!")
+                    .build());
         }
 
         var user = userRepository.findByNim(request.getNim()).get();
@@ -70,18 +79,30 @@ public class AuthenticationService {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (Exception e) {
-            return ResponseEntity.ok(MessageResponseAuth.builder().success(false).messageType("Login Failed")
-                    .message("Password is wrong!").build());
+            return ResponseEntity.ok(MessageResponseAuth
+                    .builder()
+                    .success(false)
+                    .message("Password is wrong!")
+                    .build());
         }
 
         var jwtToken = jwtService.generateToken(user);
 
-        JwtResponse jwtResponse = JwtResponse.builder().token(jwtToken).id(user.getId()).nim(user.getNim())
-                .name(user.getName()).role(user.getRole().getName()).build();
+        JwtResponse jwtResponse = JwtResponse
+                                    .builder()
+                                    .token(jwtToken)
+                                    .id(user.getId())
+                                    .nim(user.getNim())
+                                    .name(user.getName())
+                                    .role(user.getRole().getName())
+                                    .build();
 
-        return ResponseEntity
-                .ok(MessageResponseAuth.builder().success(true).messageType("Login Success").data(jwtResponse)
-                        .message("Login Success!").build());
+        return ResponseEntity.ok(MessageResponseAuth
+                .builder()
+                .success(true)
+                .message("Login Success!")
+                .data(jwtResponse)
+                .build());
     }
 
 }

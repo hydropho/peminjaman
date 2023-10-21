@@ -13,8 +13,6 @@ public class MessageResponseAuth {
 
     private boolean success;
 
-    private String messageType;
-
     private JwtResponse data;
 
     private String message;
