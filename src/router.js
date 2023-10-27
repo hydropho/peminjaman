@@ -5,6 +5,7 @@ import Home from "./views/Home"
 import Login from "./views/Login"
 import Register from "./views/Register"
 import Item from "./views/Item"
+import Tool from "./views/Tool"
 
 Vue.use(VueRouter)
 
@@ -25,6 +26,11 @@ export default new VueRouter({
             path: "/register",
             name: "register",
             component: Register
+        },
+        {
+            path: "/tool",
+            name: "tool",
+            component: Tool
         },
         {
             path: "/item",
