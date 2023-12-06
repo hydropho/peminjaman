@@ -11,7 +11,14 @@ class AuthService {
       })
       .then(response => {
         if (response.data.success) {
-          localStorage.setItem('user', JSON.stringify(response.data.data));
+          let data = response.data.data
+
+          // set expire to 1 Day
+          const ttl = 86400000
+          data.expire = new Date().getTime() + ttl
+
+          // create localstorage
+          localStorage.setItem('user', JSON.stringify(data))
         }
         return response.data;
       });

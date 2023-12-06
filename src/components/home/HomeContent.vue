@@ -1,8 +1,6 @@
 <template>
   <div class="container-fluid">
-    <div
-      class="row g-3 row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 justify-content-center"
-    >
+    <div class="row g-3 row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 justify-content-center">
       <div class="col">
         <div class="shadow-sm rounded-3 d-flex flex-column">
           <img src="@/assets/wrench.png" alt="wrench" class="rounded-top" />

@@ -1,9 +1,12 @@
 import AuthService from "@/services/auth.service";
 
-const user = JSON.parse(localStorage.getItem('user'));
-const initialState = user
-    ? { loggedIn: true, user }
-    : { loggedIn: false, user: null };
+let user = JSON.parse(localStorage.getItem('user'));
+let initialState = user ?
+    (new Date().getTime() > user.expire ?
+        { loggedIn: false, user: null } :
+        { loggedIn: true, user }
+    ) :
+    { loggedIn: false, user: null };
 
 export default {
     namespaced: true,
@@ -43,7 +46,7 @@ export default {
     },
     getters: {
         getFirstName(state) {
-            return state.user.name.split(" ")[0];
+            return state.user ? state.user.name.split(" ")[0] : null;
         }
     }
 }

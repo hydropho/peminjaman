@@ -7,14 +7,33 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import router from './router'
 import store from './store'
+import ToastPlugin from 'vue-toast-notification'
+import 'vue-toast-notification/dist/theme-bootstrap.css'
+import 'jquery/dist/jquery'
+import 'datatables.net-bs5/'
 
 Vue.config.productionTip = false
 
 Vue.use(Vuex)
 Vue.use(VeeValidate)
+Vue.use(ToastPlugin)
 
 router.beforeEach((to, from, next) => { // eslint-disable-next-line
-  if (to.meta.auth && !store.state.user.user) next({ name: 'login' })
+  if (to.meta.auth) {
+    const user = store.state.user.user;
+
+    if (user) {
+      const expirationTime = user.expire;
+
+      if (expirationTime && new Date().getTime() > expirationTime) {
+        localStorage.removeItem('user')
+        store.dispatch('user/logout')
+        next({ name: 'login'})
+      }
+      else next()
+    }
+    else next({ name: 'login' })
+  }
   else next()
 })
 
