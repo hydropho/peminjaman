@@ -3,7 +3,6 @@ package id.ac.poltekgt.backend.models;
 import java.sql.Date;
 
 import id.ac.poltekgt.backend.models.Enum.EStatus;
-import id.ac.poltekgt.backend.models.Enum.EType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -23,25 +22,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "approvals")
-public class Approval {
+@Table(name = "borrowed_tools")
+public class BorrowedTool {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    private EType type;
-
-    @NotNull
     @ManyToOne
     private User user;
 
     @NotNull
-    private Date created_at;
+    @ManyToOne
+    private Tool tool;
 
-    private Date approved_at;
+    private Date borrowed_at;
+
+    private Date returned_at;
 
     @NotNull
     @Enumerated(EnumType.STRING)

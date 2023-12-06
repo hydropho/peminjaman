@@ -15,6 +15,8 @@ public class ToolDTO {
 
     private String name;
 
+    private String filename;
+
     private Integer current_quantity;
 
     private Integer total_quantity;

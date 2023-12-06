@@ -1,0 +1,29 @@
+server:
+    port: 8090
+
+spring:
+    application:
+        name: peminjaman
+    datasource:
+        url: jdbc:mysql://localhost:3306/db_test
+        username: root
+        password:
+    jpa:
+        defer-datasource-initialization: true
+        hibernate:
+            ddl-auto: create
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQLDialect
+    servlet:
+        multipart:
+            max-file-size: 5MB
+            max-request-size: 5MB
+
+app: 
+    jwt:
+        secret-key: 0zSnQW4ufv/zBXLcLP2IAqd/EzIi9+c+N8cIDyaeb8Y=
+        expiration: 86400000
+    file:
+        allowed-file-extention: image/png, image/jpg, image/jpeg
+        base-directory: C://Users/GDA-User/Documents/peminjaman/backend/src/main/resources/static/

@@ -33,11 +33,14 @@ public class Tool {
     private String name;
 
     @NotNull
+    private String filename;
+
+    @NotNull
     private Integer current_quantity;
 
     @NotNull
     private Integer total_quantity;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tool")
-    private List<UserTool> userTools;
+    private List<BorrowedTool> borrowedTools;
 }

@@ -52,10 +52,10 @@ public class User implements UserDetails {
     private Role role;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<Approval> approvals;
+    private List<BorrowRequest> borrowRequests;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<UserTool> userTools;
+    private List<BorrowedTool> borrowedTools;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

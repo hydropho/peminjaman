@@ -1,10 +1,18 @@
 package id.ac.poltekgt.backend.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import id.ac.poltekgt.backend.models.Tool;
 import id.ac.poltekgt.backend.models.dao.ToolDAO;
@@ -19,6 +27,12 @@ import lombok.RequiredArgsConstructor;
 public class ToolService {
 
     private final ToolRepository toolRepository;
+
+    @Value("${app.file.allowed-file-extention}")
+    private List<String> allowedFileExtention;
+
+    @Value("${app.file.base-directory}")
+    private String baseDirectory;
     
     public ResponseEntity<?> getAll() {
         if (toolRepository.findAll().isEmpty()){
@@ -37,6 +51,7 @@ public class ToolService {
                             .builder()
                             .id(tool.getId())
                             .name(tool.getName())
+                            .filename(tool.getFilename())
                             .current_quantity(tool.getCurrent_quantity())
                             .total_quantity(tool.getTotal_quantity())
                             .build());
@@ -69,13 +84,14 @@ public class ToolService {
                     .builder()
                     .id(id)
                     .name(tool.getName())
+                    .filename(tool.getFilename())
                     .current_quantity(tool.getCurrent_quantity())
                     .total_quantity(tool.getTotal_quantity())
                     .build())
                 .build());
     }
 
-    public ResponseEntity<?> add(ToolDAO request) {
+    public ResponseEntity<?> add(ToolDAO request, MultipartFile image) {
         if(toolRepository.existsByName(request.getName())) {
             return ResponseEntity.ok(MessageResponseSingle
                     .builder()
@@ -91,6 +107,7 @@ public class ToolService {
                     .message("Current quantity and total quantity must be the same!")
                     .build());
         }
+
         if(request.getCurrent_quantity() > request.getTotal_quantity()) {
             return ResponseEntity.ok(MessageResponseSingle
                     .builder()
@@ -98,11 +115,42 @@ public class ToolService {
                     .message("Current quantity cannot be higher than total quantity!")
                     .build());
         }
-        
+
+        if(image.isEmpty()) {
+            return ResponseEntity.ok(MessageResponseSingle
+                    .builder()
+                    .success(false)
+                    .message("Image cannot be empty!")
+                    .build());
+        }
+
+        if(!allowedFileExtention.contains(image.getContentType())){
+            return ResponseEntity.ok(MessageResponseSingle
+                    .builder()
+                    .success(false)
+                    .message("Only JPG, JPEG, and PNG are allowed!")
+                    .build());
+        }
+
+        String filename = UUID.randomUUID().toString() + "." + StringUtils.getFilenameExtension(image.getOriginalFilename());
+
+        String filepath = baseDirectory + filename;
+
+        try {
+            image.transferTo(new File(filepath));
+        } catch (IllegalStateException | IOException e) {
+            return ResponseEntity.ok(MessageResponseSingle
+                    .builder()
+                    .success(false)
+                    .message("Failed uploading image, please try again!")
+                    .build());
+        }
+
         Tool tool =  Tool.builder()
                 .name(request.getName())
                 .current_quantity(request.getCurrent_quantity())
                 .total_quantity(request.getTotal_quantity())
+                .filename(filename)
                 .build();
 
         toolRepository.save(tool);
@@ -114,7 +162,26 @@ public class ToolService {
                 .build());
     }
 
-    public ResponseEntity<?> update(Integer id, ToolDAO newTool) {
+    public ResponseEntity<?> getImage(String filename) {
+        String filepath = baseDirectory + filename;
+        byte[] image;
+
+        try {
+            image = Files.readAllBytes(new File(filepath).toPath());
+        } catch (IOException e) {
+            return ResponseEntity.ok(MessageResponseSingle
+                .builder()
+                .success(false)
+                .message("Image not found!")
+                .build());
+        }
+
+        String fileExtention = StringUtils.getFilenameExtension(filename);
+
+        return ResponseEntity.ok().contentType(MediaType.valueOf("image/"+fileExtention)).body(image);
+    }
+
+    public ResponseEntity<?> update(Integer id, ToolDAO newTool, MultipartFile image) {
         if(!toolRepository.existsById(id)) {
             return ResponseEntity.ok(MessageResponseSingle
                     .builder()
@@ -132,6 +199,34 @@ public class ToolService {
         }
 
         Tool tool = toolRepository.findById(id).get();
+
+        if(image.getOriginalFilename() != tool.getFilename()) {
+            try {
+                Files.delete(new File(baseDirectory+tool.getFilename()).toPath());
+            } catch (IOException e) {
+                return ResponseEntity.ok(MessageResponseSingle
+                        .builder()
+                        .success(false)
+                        .message("Failed deleting image, please try again!")
+                        .build());
+            }
+
+            String filename = UUID.randomUUID().toString() + "." + StringUtils.getFilenameExtension(image.getOriginalFilename());
+
+            String filepath = baseDirectory + filename;
+            
+            
+            try {
+                image.transferTo(new File(filepath));
+                tool.setFilename(filename);
+            } catch (IllegalStateException | IOException e) {
+                return ResponseEntity.ok(MessageResponseSingle
+                        .builder()
+                        .success(false)
+                        .message("Failed uploading image, please try again!")
+                        .build());
+            }
+        }
 
         tool.setName(newTool.getName());
         tool.setCurrent_quantity(newTool.getCurrent_quantity());
@@ -152,6 +247,18 @@ public class ToolService {
                     .builder()
                     .success(false)
                     .message("Tool not exist!")
+                    .build());
+        }
+
+        Tool tool = toolRepository.findById(id).get();
+
+        try {
+            Files.delete(new File(baseDirectory+tool.getFilename()).toPath());
+        } catch (IOException e) {
+            return ResponseEntity.ok(MessageResponseSingle
+                    .builder()
+                    .success(false)
+                    .message("Failed deleting image, please try again!")
                     .build());
         }
 

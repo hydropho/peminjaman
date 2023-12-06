@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import id.ac.poltekgt.backend.models.dao.ToolDAO;
 import id.ac.poltekgt.backend.service.ToolService;
@@ -34,13 +35,18 @@ public class ToolController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody ToolDAO tool) {
-        return toolService.add(tool);
+    public ResponseEntity<?> add(@RequestPart("data") ToolDAO tool, @RequestPart("image") MultipartFile image) {
+        return toolService.add(tool, image);
+    }
+
+    @GetMapping("/getImage/{filename}")
+    public ResponseEntity<?> getByImage(@PathVariable String filename) {
+        return toolService.getImage(filename);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody ToolDAO tool) {
-        return toolService.update(id, tool);
+    public ResponseEntity<?> update(@PathVariable Integer id, @RequestPart("data") ToolDAO tool, @RequestPart("image") MultipartFile image) {
+        return toolService.update(id, tool, image);
     }
 
     @DeleteMapping("/delete/{id}")
