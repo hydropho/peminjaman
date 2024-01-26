@@ -35,9 +35,9 @@ public class DatabaseSeeder {
                             .build();
     
             roleRepository.save(admin);
-            logger.info("Role admin added!");
+            logger.info("Role admin added.");
         } else {
-            logger.info("Role admin already exist!");
+            logger.info("Role admin already exist.");
         }
         
         if (!roleRepository.existsById(2)) {
@@ -46,9 +46,9 @@ public class DatabaseSeeder {
             .build();
             
             roleRepository.save(user);
-            logger.info("Role user added!");    
+            logger.info("Role user added.");    
         } else {
-            logger.info("Role admin already exist!");
+            logger.info("Role admin already exist.");
         }
     }
 
@@ -62,9 +62,9 @@ public class DatabaseSeeder {
                             .build();
                      
             userRepository.save(admin);
-            logger.info("User admin created!");
+            logger.info("User admin created.");
         } else {
-            logger.info("User admin already exist!");
+            logger.info("User admin already exist.");
         }
 
     }

@@ -51,7 +51,7 @@ public class ToolService {
                             .builder()
                             .id(tool.getId())
                             .name(tool.getName())
-                            .filename(tool.getFilename())
+                            .filename(tool.getFile_name())
                             .current_quantity(tool.getCurrent_quantity())
                             .total_quantity(tool.getTotal_quantity())
                             .build());
@@ -84,7 +84,7 @@ public class ToolService {
                     .builder()
                     .id(id)
                     .name(tool.getName())
-                    .filename(tool.getFilename())
+                    .filename(tool.getFile_name())
                     .current_quantity(tool.getCurrent_quantity())
                     .total_quantity(tool.getTotal_quantity())
                     .build())
@@ -100,7 +100,7 @@ public class ToolService {
                     .build());
         }
 
-        if(request.getCurrent_quantity() != request.getTotal_quantity()) {
+        if(request.getCurrentQuantity() != request.getTotalQuantity()) {
             return ResponseEntity.ok(MessageResponseSingle
                     .builder()
                     .success(false)
@@ -108,7 +108,7 @@ public class ToolService {
                     .build());
         }
 
-        if(request.getCurrent_quantity() > request.getTotal_quantity()) {
+        if(request.getCurrentQuantity() > request.getTotalQuantity()) {
             return ResponseEntity.ok(MessageResponseSingle
                     .builder()
                     .success(false)
@@ -132,12 +132,12 @@ public class ToolService {
                     .build());
         }
 
-        String filename = UUID.randomUUID().toString() + "." + StringUtils.getFilenameExtension(image.getOriginalFilename());
+        String file_name = UUID.randomUUID().toString() + "." + StringUtils.getFilenameExtension(image.getOriginalFilename());
 
-        String filepath = baseDirectory + filename;
+        String file_path = baseDirectory + file_name;
 
         try {
-            image.transferTo(new File(filepath));
+            image.transferTo(new File(file_path));
         } catch (IllegalStateException | IOException e) {
             return ResponseEntity.ok(MessageResponseSingle
                     .builder()
@@ -148,9 +148,9 @@ public class ToolService {
 
         Tool tool =  Tool.builder()
                 .name(request.getName())
-                .current_quantity(request.getCurrent_quantity())
-                .total_quantity(request.getTotal_quantity())
-                .filename(filename)
+                .current_quantity(request.getCurrentQuantity())
+                .total_quantity(request.getTotalQuantity())
+                .file_name(file_name)
                 .build();
 
         toolRepository.save(tool);
@@ -190,7 +190,7 @@ public class ToolService {
                     .build());
         }
 
-        if (newTool.getCurrent_quantity() > newTool.getTotal_quantity()) {
+        if (newTool.getCurrentQuantity() > newTool.getTotalQuantity()) {
             return ResponseEntity.ok(MessageResponseSingle
                     .builder()
                     .success(false)
@@ -200,9 +200,9 @@ public class ToolService {
 
         Tool tool = toolRepository.findById(id).get();
 
-        if(image.getOriginalFilename() != tool.getFilename()) {
+        if(image.getOriginalFilename() != tool.getFile_name()) {
             try {
-                Files.delete(new File(baseDirectory+tool.getFilename()).toPath());
+                Files.delete(new File(baseDirectory+tool.getFile_name()).toPath());
             } catch (IOException e) {
                 return ResponseEntity.ok(MessageResponseSingle
                         .builder()
@@ -211,14 +211,14 @@ public class ToolService {
                         .build());
             }
 
-            String filename = UUID.randomUUID().toString() + "." + StringUtils.getFilenameExtension(image.getOriginalFilename());
+            String file_name = UUID.randomUUID().toString() + "." + StringUtils.getFilenameExtension(image.getOriginalFilename());
 
-            String filepath = baseDirectory + filename;
+            String file_path = baseDirectory + file_name;
             
             
             try {
-                image.transferTo(new File(filepath));
-                tool.setFilename(filename);
+                image.transferTo(new File(file_path));
+                tool.setFile_name(file_name);
             } catch (IllegalStateException | IOException e) {
                 return ResponseEntity.ok(MessageResponseSingle
                         .builder()
@@ -229,8 +229,8 @@ public class ToolService {
         }
 
         tool.setName(newTool.getName());
-        tool.setCurrent_quantity(newTool.getCurrent_quantity());
-        tool.setTotal_quantity(newTool.getTotal_quantity());
+        tool.setCurrent_quantity(newTool.getCurrentQuantity());
+        tool.setTotal_quantity(newTool.getTotalQuantity());
 
         toolRepository.save(tool);
 
@@ -253,7 +253,7 @@ public class ToolService {
         Tool tool = toolRepository.findById(id).get();
 
         try {
-            Files.delete(new File(baseDirectory+tool.getFilename()).toPath());
+            Files.delete(new File(baseDirectory+tool.getFile_name()).toPath());
         } catch (IOException e) {
             return ResponseEntity.ok(MessageResponseSingle
                     .builder()

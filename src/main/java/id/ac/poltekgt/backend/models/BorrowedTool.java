@@ -2,7 +2,7 @@ package id.ac.poltekgt.backend.models;
 
 import java.sql.Date;
 
-import id.ac.poltekgt.backend.models.Enum.EStatus;
+import id.ac.poltekgt.backend.models.Enum.EBorrowingStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -31,17 +31,17 @@ public class BorrowedTool {
 
     @NotNull
     @ManyToOne
-    private User user;
+    private BorrowRequest borrow_request;
+
+    @ManyToOne
+    private ReturnRequest return_request;
 
     @NotNull
-    @ManyToOne
-    private Tool tool;
-
     private Date borrowed_at;
 
     private Date returned_at;
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private EStatus status;
+    private EBorrowingStatus borrowing_status;
 }

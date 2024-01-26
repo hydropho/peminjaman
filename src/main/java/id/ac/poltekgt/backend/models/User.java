@@ -55,7 +55,7 @@ public class User implements UserDetails {
     private List<BorrowRequest> borrowRequests;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<BorrowedTool> borrowedTools;
+    private List<ReturnRequest> returnRequests;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

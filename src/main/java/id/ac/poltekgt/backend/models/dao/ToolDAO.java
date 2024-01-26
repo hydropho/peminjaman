@@ -13,7 +13,7 @@ public class ToolDAO {
     
     private String name;
 
-    private Integer current_quantity;
+    private Integer currentQuantity;
 
-    private Integer total_quantity;
+    private Integer totalQuantity;
 }
