@@ -31,7 +31,6 @@
           </div>
         </div>
       </div>
-      <div class="col">
         <div class="shadow-sm rounded-3 d-flex flex-column">
           <img src="@/assets/welding.jpg" alt="wrench" class="rounded-top" />
           <div class="content p-3 d-flex flex-column">

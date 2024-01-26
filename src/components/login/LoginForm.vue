@@ -20,11 +20,11 @@
       <p v-if="errors.has('nim')" class="text-danger">{{ nimError }}</p>
     </div>
     <div class="mb-3 w-100">
-      <label for="exampleInputPassword1" class="form-label">Password</label>
+      <label for="password" class="form-label">Password</label>
       <input
         type="password"
         class="form-control"
-        id="exampleInputPassword1"
+        id="password"
         v-model="user.password"
         v-validate="'required'"
         name="password"
